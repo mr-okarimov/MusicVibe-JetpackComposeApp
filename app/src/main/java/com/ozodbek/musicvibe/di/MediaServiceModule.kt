@@ -39,7 +39,6 @@ val mediaServiceModule = module {
             .build()
     }
 
-    // Provide ForwardingPlayer
     single { (player: ExoPlayer) ->
         object : ForwardingPlayer(player) {
             override fun getAvailableCommands(): Player.Commands {
