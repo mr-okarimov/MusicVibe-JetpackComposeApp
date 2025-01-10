@@ -81,4 +81,7 @@ dependencies {
     implementation(libs.bundles.koin.compose)
     implementation(libs.kotlinx.serialization.json)
 
+    implementation(libs.kotlinx.coroutines.guava)
+
+
 }
