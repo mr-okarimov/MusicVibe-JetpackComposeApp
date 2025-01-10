@@ -39,6 +39,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     packaging {
         resources {
@@ -82,6 +83,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.kotlinx.coroutines.guava)
+    implementation(libs.timber)
 
 
 }
