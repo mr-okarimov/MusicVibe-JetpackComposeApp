@@ -9,6 +9,7 @@ import androidx.core.content.getSystemService
 import com.ozodbek.musicvibe.di.activityPlayerModule
 import com.ozodbek.musicvibe.di.appModule
 import com.ozodbek.musicvibe.di.mediaServiceModule
+import com.ozodbek.musicvibe.di.viewModelModule
 import com.ozodbek.musicvibe.utils.NotificationConstants
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
@@ -25,6 +26,7 @@ class MusicVibeApplication : Application() {
             appModule,
             mediaServiceModule,
             activityPlayerModule,
+            viewModelModule
         )
 
 
