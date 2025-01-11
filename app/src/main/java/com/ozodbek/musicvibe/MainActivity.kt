@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.media3.session.MediaController
 import com.google.common.util.concurrent.ListenableFuture
 import com.ozodbek.musicvibe.presentation.composables.NoReadPermissions
+import com.ozodbek.musicvibe.presentation.navigation.NavigationGraph
 import com.ozodbek.musicvibe.presentation.util.checkAudioReadPermissions
 import com.ozodbek.musicvibe.ui.theme.MusicVibeTheme
 import org.koin.android.ext.android.inject
@@ -37,7 +38,7 @@ class MainActivity : ComponentActivity() {
                     val isReadPermissionProvided = checkAudioReadPermissions()
 
                     when {
-                        isReadPermissionProvided -> {}
+                        isReadPermissionProvided -> NavigationGraph()
 
                         else -> NoReadPermissions()
                     }
