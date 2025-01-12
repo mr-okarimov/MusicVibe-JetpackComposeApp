@@ -2,6 +2,7 @@ package com.ozodbek.musicvibe.di
 
 import com.ozodbek.musicvibe.presentation.screens.audiofiles.AudioFilesViewModel
 import com.ozodbek.musicvibe.presentation.screens.SharedSongPlayerViewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -16,5 +17,10 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModelOf(::AudioFilesViewModel)
-    viewModelOf(::SharedSongPlayerViewModel)
+    viewModel {
+        SharedSongPlayerViewModel(
+            playerController = get(),
+            playerListener = get()
+        )
+    }
 }

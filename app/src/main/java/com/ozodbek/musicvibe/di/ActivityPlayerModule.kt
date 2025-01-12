@@ -12,7 +12,6 @@ import org.koin.dsl.module
 
 val activityPlayerModule: Module = module {
 
-    // Provide SessionToken
     factory { (context: Context) ->
         SessionToken(
             context,
@@ -20,12 +19,10 @@ val activityPlayerModule: Module = module {
         )
     }
 
-    // Provide ListenableFuture<MediaController>
     factory { (context: Context, session: SessionToken) ->
         MediaController.Builder(context, session).buildAsync()
     }
 
-    // Provide MediaControllerListener
     factory { (future: ListenableFuture<MediaController>) ->
         MediaControllerListener(future)
     }

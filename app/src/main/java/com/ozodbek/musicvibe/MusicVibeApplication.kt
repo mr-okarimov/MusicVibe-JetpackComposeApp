@@ -15,11 +15,10 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
 import timber.log.Timber
 
-
 class MusicVibeApplication : Application() {
 
     private val notificationManager by lazy { getSystemService<NotificationManager>() }
-    @RequiresApi(Build.VERSION_CODES.O)
+
     override fun onCreate() {
         super.onCreate()
         val modules = listOf(
@@ -29,7 +28,6 @@ class MusicVibeApplication : Application() {
             viewModelModule
         )
 
-
         startKoin {
             androidContext(this@MusicVibeApplication)
             koin.loadModules(
@@ -37,18 +35,28 @@ class MusicVibeApplication : Application() {
             )
         }
 
-        val channel = NotificationChannel(
-            NotificationConstants.NOTIFICATION_CHANNEL_ID,
-            NotificationConstants.NOTIFICATION_CHANNEL_NAME,
-            NotificationManager.IMPORTANCE_HIGH
-        ).apply {
-            description = NotificationConstants.NOTIFICATION_CHANNEL_DESC
-            setSound(null, null)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel()
+        }
+
+        initTimber()
+    }
+
+    private fun createNotificationChannel() {
+        val channel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel(
+                NotificationConstants.NOTIFICATION_CHANNEL_ID,
+                NotificationConstants.NOTIFICATION_CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                description = NotificationConstants.NOTIFICATION_CHANNEL_DESC
+                setSound(null, null)
+            }
+        } else {
+            TODO("VERSION.SDK_INT < O")
         }
 
         notificationManager?.createNotificationChannel(channel)
-
-        initTimber()
     }
 
     private fun initTimber() = when {
@@ -61,7 +69,7 @@ class MusicVibeApplication : Application() {
         }
 
         else -> {
-          //  Timber.plant(CrashlyticsTree())
+            // Timber.plant(CrashlyticsTree())
         }
     }
 }
