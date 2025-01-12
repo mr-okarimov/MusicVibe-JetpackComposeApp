@@ -1,4 +1,4 @@
-package com.ozodbek.musicvibe.presentation.screens
+package com.ozodbek.musicvibe.presentation.screens.audiofiles
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

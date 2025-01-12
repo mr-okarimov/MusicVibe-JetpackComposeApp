@@ -9,9 +9,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.ozodbek.musicvibe.presentation.screens.AudioFilesScreen
-import com.ozodbek.musicvibe.presentation.screens.AudioFilesViewModel
-import com.ozodbek.musicvibe.presentation.screens.PlaySongScreen
+import com.ozodbek.musicvibe.presentation.screens.audiofiles.AudioFilesScreen
+import com.ozodbek.musicvibe.presentation.screens.audiofiles.AudioFilesViewModel
+import com.ozodbek.musicvibe.presentation.screens.playsong.PlaySongScreen
 import com.ozodbek.musicvibe.presentation.screens.SharedSongPlayerViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -59,9 +59,12 @@ fun NavigationGraph(
         }
         composable<Screens.PlaySongScreen> { backStackEntry ->
             val toRoute: Screens.PlaySongScreen = backStackEntry.toRoute()
+            val trackData by sharedViewModel.trackDataFlow.collectAsStateWithLifecycle()
             PlaySongScreen(
                 onBackClick = navHostController::navigateUp,
-                songUrl = toRoute.songUrl
+                songState = currentSelectedSong,
+                onSongEvents = sharedViewModel::onPlaySongEvents,
+                trackData = trackData
             )
         }
     }

@@ -1,6 +1,6 @@
 package com.ozodbek.musicvibe.di
 
-import com.ozodbek.musicvibe.presentation.screens.AudioFilesViewModel
+import com.ozodbek.musicvibe.presentation.screens.audiofiles.AudioFilesViewModel
 import com.ozodbek.musicvibe.presentation.screens.SharedSongPlayerViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
