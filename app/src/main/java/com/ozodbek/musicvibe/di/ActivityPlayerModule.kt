@@ -7,23 +7,43 @@ import androidx.media3.session.SessionToken
 import com.google.common.util.concurrent.ListenableFuture
 import com.ozodbek.musicvibe.data.player.MediaControllerListener
 import com.ozodbek.musicvibe.data.player.MediaPlayBackService
-import org.koin.core.module.Module
-import org.koin.dsl.module
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 
-val activityPlayerModule: Module = module {
+@Module
+@InstallIn(ActivityRetainedComponent::class)
+object ActivityPlayerModule {
 
-    factory { (context: Context) ->
-        SessionToken(
+    @Provides
+    @ActivityRetainedScoped
+    fun getSessionToken(
+        @ApplicationContext context: Context
+    ): SessionToken {
+        return SessionToken(
             context,
             ComponentName(context, MediaPlayBackService::class.java)
         )
     }
 
-    factory { (context: Context, session: SessionToken) ->
-        MediaController.Builder(context, session).buildAsync()
+    @Provides
+    @ActivityRetainedScoped
+    fun getListenableController(
+        @ApplicationContext context: Context,
+        session: SessionToken
+    ): ListenableFuture<MediaController> {
+        return MediaController.Builder(context, session)
+            .buildAsync()
     }
 
-    factory { (future: ListenableFuture<MediaController>) ->
-        MediaControllerListener(future)
+    @Provides
+    @ActivityRetainedScoped
+    fun providesListener(
+        future: ListenableFuture<MediaController>
+    ): MediaControllerListener {
+        return MediaControllerListener(future)
     }
 }

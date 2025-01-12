@@ -3,11 +3,23 @@ package com.ozodbek.musicvibe.di
 import android.content.Context
 import com.ozodbek.musicvibe.data.music.MusicFileReaderImpl
 import com.ozodbek.musicvibe.domain.music.MusicFileReader
-import org.koin.dsl.module
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-val appModule = module {
 
-    single<MusicFileReader> { (context: Context) ->
-        MusicFileReaderImpl(context)
+@Module
+@InstallIn(SingletonComponent::class)
+object AppModule {
+
+    @Provides
+    @Singleton
+    fun musicFileReader(
+        @ApplicationContext context: Context
+    ): MusicFileReader {
+        return MusicFileReaderImpl(context)
     }
 }

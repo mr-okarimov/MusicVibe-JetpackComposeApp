@@ -4,7 +4,9 @@ import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -14,6 +16,7 @@ import com.ozodbek.musicvibe.presentation.screens.audiofiles.AudioFilesViewModel
 import com.ozodbek.musicvibe.presentation.screens.playsong.PlaySongScreen
 import com.ozodbek.musicvibe.presentation.screens.SharedSongPlayerViewModel
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 
 /**
@@ -29,8 +32,9 @@ fun NavigationGraph(
 ) {
     val navHostController = rememberNavController()
 
+    val sharedViewModel = hiltViewModel<SharedSongPlayerViewModel>()
 
-    val sharedViewModel = koinViewModel<SharedSongPlayerViewModel>()
+
 
     val currentSelectedSong by sharedViewModel.currentSelectedSong.collectAsStateWithLifecycle()
     NavHost(
@@ -39,7 +43,7 @@ fun NavigationGraph(
         modifier = modifier
     ) {
         composable<Screens.AudioFilesScreen> {
-            val viewModel = koinViewModel<AudioFilesViewModel>()
+            val viewModel = hiltViewModel<AudioFilesViewModel>()
 
             val files by viewModel.audioFiles.collectAsStateWithLifecycle()
             val sortState by viewModel.sortState.collectAsStateWithLifecycle()

@@ -9,14 +9,17 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
-import com.ozodbek.musicvibe.di.mediaServiceModule
-import org.koin.android.ext.android.inject
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MediaPlayBackService : MediaSessionService() {
 
-    // Inject dependencies using Koin
-    private val session: MediaSession by inject()
-    private val exoPlayer: ExoPlayer by inject()
+    @Inject
+    lateinit var session: MediaSession
+
+    @Inject
+    lateinit var exoPlayer: ExoPlayer
 
     private val playerListener = object : Player.Listener {
 
@@ -56,6 +59,7 @@ class MediaPlayBackService : MediaSessionService() {
         super.onUpdateNotification(session, startInForegroundRequired)
     }
 
+
     override fun onDestroy() {
         session.apply {
             player.release()
@@ -63,4 +67,5 @@ class MediaPlayBackService : MediaSessionService() {
         }
         super.onDestroy()
     }
+
 }
