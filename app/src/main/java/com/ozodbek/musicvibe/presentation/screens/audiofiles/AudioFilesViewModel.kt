@@ -1,4 +1,4 @@
-package com.ozodbek.musicvibe.presentation.screens
+package com.ozodbek.musicvibe.presentation.screens.audiofiles
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
