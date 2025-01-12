@@ -1,6 +1,5 @@
 package com.ozodbek.musicvibe.di
 
-import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -9,6 +8,7 @@ import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.ForwardingPlayer
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.media3.session.MediaConstants
@@ -16,22 +16,36 @@ import androidx.media3.session.MediaSession
 import com.ozodbek.musicvibe.data.player.MediaSessionCallbacks
 import com.ozodbek.musicvibe.utils.AppConstants
 import com.ozodbek.musicvibe.utils.MediaSessionConstants
-import org.koin.dsl.module
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ServiceComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ServiceScoped
 
-@SuppressLint("UnsafeOptInUsageError")
-val mediaServiceModule = module {
+@Module
+@InstallIn(ServiceComponent::class)
+object MediaServiceModule {
 
-    // Provide AudioAttributes
-    single {
-        AudioAttributes.Builder()
+    @Provides
+    @ServiceScoped
+    fun provideAudioAttributes(): AudioAttributes {
+        return AudioAttributes
+            .Builder()
             .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
             .setUsage(C.USAGE_MEDIA)
             .build()
     }
 
-    // Provide ExoPlayer
-    single { (context: Context, audioAttributes: AudioAttributes) ->
-        ExoPlayer.Builder(context)
+
+    @Provides
+    @ServiceScoped
+    @UnstableApi
+    fun getPlayer(
+        @ApplicationContext context: Context,
+        audioAttributes: AudioAttributes,
+    ): ExoPlayer {
+        return ExoPlayer.Builder(context)
             .setAudioAttributes(audioAttributes, true)
             .setHandleAudioBecomingNoisy(true)
             .setWakeMode(C.WAKE_MODE_LOCAL)
@@ -39,8 +53,13 @@ val mediaServiceModule = module {
             .build()
     }
 
-    single { (player: ExoPlayer) ->
-        object : ForwardingPlayer(player) {
+    @Provides
+    @ServiceScoped
+    @UnstableApi
+    fun getForwardingPLayer(
+        player: ExoPlayer
+    ): ForwardingPlayer {
+        return object : ForwardingPlayer(player) {
             override fun getAvailableCommands(): Player.Commands {
                 return super.getAvailableCommands()
                     .buildUpon()
@@ -53,8 +72,14 @@ val mediaServiceModule = module {
         }
     }
 
-    // Provide MediaSession
-    single { (context: Context, player: ForwardingPlayer) ->
+    @UnstableApi
+    @Provides
+    @ServiceScoped
+    fun getMediaSessions(
+        @ApplicationContext context: Context,
+        player: ForwardingPlayer
+    ): MediaSession {
+
         val pendingIntent = context.packageManager
             .getLaunchIntentForPackage(context.packageName)
             ?.apply {
@@ -68,19 +93,19 @@ val mediaServiceModule = module {
                     PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
                 )
             }
-
         val extras = Bundle().apply {
             putBoolean(MediaConstants.EXTRAS_KEY_SLOT_RESERVATION_SEEK_TO_PREV, true)
             putBoolean(MediaConstants.EXTRAS_KEY_SLOT_RESERVATION_SEEK_TO_NEXT, true)
         }
 
-        MediaSession.Builder(context, player)
+        return MediaSession.Builder(context, player)
             .apply {
-                pendingIntent?.let { setSessionActivity(it) }
+                pendingIntent?.let { intent -> setSessionActivity(intent) }
             }
             .setExtras(extras)
             .setCallback(MediaSessionCallbacks())
             .setId(MediaSessionConstants.MEDIA_SESSION_TAG)
             .build()
     }
+
 }

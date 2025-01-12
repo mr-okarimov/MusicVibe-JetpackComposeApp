@@ -8,22 +8,25 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionCommand
-import com.google.common.util.concurrent.ListenableFuture
 import com.ozodbek.musicvibe.data.player.MediaControllerListener
 import com.ozodbek.musicvibe.domain.models.MusicResourceModel
 import com.ozodbek.musicvibe.presentation.util.MusicTrackData
-import com.ozodbek.musicvibe.presentation.util.states.CurrentSelectedSongState
 import com.ozodbek.musicvibe.presentation.util.states.SongEvents
+import com.ozodbek.musicvibe.presentation.util.states.CurrentSelectedSongState
 import com.ozodbek.musicvibe.utils.MediaSessionConstants
+import com.google.common.util.concurrent.ListenableFuture
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.guava.await
+import javax.inject.Inject
 import kotlinx.coroutines.launch
 
-class SharedSongPlayerViewModel(
+@HiltViewModel
+class SharedSongPlayerViewModel @Inject constructor(
     private val playerController: ListenableFuture<MediaController>,
     private val playerListener: MediaControllerListener,
 ) : ViewModel() {

@@ -7,13 +7,16 @@ import com.ozodbek.musicvibe.domain.music.MusicFileReader
 import com.ozodbek.musicvibe.presentation.util.MusicSortOrder
 import com.ozodbek.musicvibe.presentation.util.states.ChangeSortOrderEvents
 import com.ozodbek.musicvibe.presentation.util.states.MusicSortState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AudioFilesViewModel(
+@HiltViewModel
+class AudioFilesViewModel @Inject constructor(
     private val reader: MusicFileReader,
 ) : ViewModel() {
 
